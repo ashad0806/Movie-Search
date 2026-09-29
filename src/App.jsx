@@ -2,17 +2,21 @@ import { useState } from 'react'
 import { searchMovies } from './services/MovieApi'
 import SearchBar from './components/SearchBar'
 import Loader from './components/Loader'
+import ErrorMessage from './components/ErrorMessage'
 
 export default function App() {
   const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
 
   const handleSearch = async (query) => {
     setLoading(true)
+    setError('')
+
     try {
       const results = await searchMovies(query)
-      console.log(results) // temporary: MovieGrid comes in a later step
+      console.log(results) // temporary: MovieGrid comes in the next step
     } catch (err) {
-      console.error(err.message)
+      setError(err.message)
     } finally {
       setLoading(false)
     }
@@ -25,7 +29,10 @@ export default function App() {
           Movie Search
         </h1>
         <SearchBar onSearch={handleSearch} loading={loading} />
-        <div className="mt-6">{loading && <Loader />}</div>
+        <div className="mt-6">
+          {loading && <Loader />}
+          {error && !loading && <ErrorMessage message={error} />}
+        </div>
       </div>
     </div>
   )
