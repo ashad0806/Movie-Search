@@ -1,14 +1,19 @@
 import { useState } from 'react'
-import { searchMovies } from './services/movieApi'
+import { searchMovies, getMovieDetails } from './services/MovieApi'
 import SearchBar from './components/SearchBar'
 import Loader from './components/Loader'
 import ErrorMessage from './components/ErrorMessage'
 import MovieGrid from './components/MovieGrid'
+import MovieModal from './components/MovieModal'
 
 export default function App() {
   const [movies, setMovies] = useState([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+
+  const [selectedMovie, setSelectedMovie] = useState(null)
+  const [detailsLoading, setDetailsLoading] = useState(false)
+  const [modalOpen, setModalOpen] = useState(false)
 
   const handleSearch = async (query) => {
     setLoading(true)
@@ -25,8 +30,25 @@ export default function App() {
     }
   }
 
-  const handleSelectMovie = (id) => {
-    console.log('Selected movie:', id) // temporary: details view comes next step
+  const handleSelectMovie = async (id) => {
+    setModalOpen(true)
+    setDetailsLoading(true)
+    setSelectedMovie(null)
+
+    try {
+      const details = await getMovieDetails(id)
+      setSelectedMovie(details)
+    } catch (err) {
+      setModalOpen(false)
+      setError(err.message)
+    } finally {
+      setDetailsLoading(false)
+    }
+  }
+
+  const handleCloseModal = () => {
+    setModalOpen(false)
+    setSelectedMovie(null)
   }
 
   return (
@@ -52,6 +74,14 @@ export default function App() {
             </p>
           )}
         </div>
+
+        {modalOpen && (
+          <MovieModal
+            movie={selectedMovie}
+            loading={detailsLoading}
+            onClose={handleCloseModal}
+          />
+        )}
       </div>
     </div>
   )
