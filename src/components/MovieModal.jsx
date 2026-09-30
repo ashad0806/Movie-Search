@@ -1,4 +1,4 @@
-export default function MovieModal({ movie, onClose, loading }) {
+export default function MovieModal({ movie, onClose, loading, onToggleFavorite, isFavorite }) {
   return (
     <div
       onClick={onClose}
@@ -37,13 +37,24 @@ export default function MovieModal({ movie, onClose, loading }) {
                   {movie.title}{' '}
                   <span className="font-normal text-slate-400">({movie.year})</span>
                 </h2>
-                <button
-                  onClick={onClose}
-                  className="shrink-0 text-slate-400 hover:text-slate-100"
-                  aria-label="Close"
-                >
-                  ✕
-                </button>
+                <div className="flex shrink-0 items-center gap-2">
+                  <button
+                    onClick={() => onToggleFavorite(movie)}
+                    className={`text-xl ${
+                      isFavorite ? 'text-amber-400' : 'text-slate-500 hover:text-amber-400'
+                    }`}
+                    aria-label="Toggle favorite"
+                  >
+                    ★
+                  </button>
+                  <button
+                    onClick={onClose}
+                    className="text-slate-400 hover:text-slate-100"
+                    aria-label="Close"
+                  >
+                    ✕
+                  </button>
+                </div>
               </div>
 
               {movie.rating && movie.rating !== 'N/A' && (

@@ -6,6 +6,9 @@ export async function searchMovies(query) {
   const res = await fetch(url)
 
   if (!res.ok) {
+    if (res.status === 401) {
+      throw new Error('Invalid API key. Check your .env file or confirm your OMDb email.')
+    }
     throw new Error('Something went wrong. Please try again.')
   }
 
@@ -31,6 +34,9 @@ export async function getMovieDetails(imdbID) {
   const res = await fetch(url)
 
   if (!res.ok) {
+    if (res.status === 401) {
+      throw new Error('Invalid API key. Check your .env file or confirm your OMDb email.')
+    }
     throw new Error('Something went wrong. Please try again.')
   }
 
