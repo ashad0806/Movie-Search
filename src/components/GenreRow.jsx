@@ -23,7 +23,7 @@ export default function GenreRow({ title, imdbIds, onSelect }) {
   if (!loading && movies.length === 0) return null
 
   return (
-    <div className="mb-8">
+    <div className="mb-10">
       <h3 className="mb-3 text-lg font-semibold text-slate-100">{title}</h3>
 
       {loading ? (
@@ -31,7 +31,7 @@ export default function GenreRow({ title, imdbIds, onSelect }) {
           {imdbIds.map((id) => (
             <div
               key={id}
-              className="h-48 w-32 shrink-0 animate-pulse rounded-xl bg-slate-800"
+              className="h-56 w-36 shrink-0 animate-pulse rounded-xl bg-slate-800"
             />
           ))}
         </div>
@@ -41,7 +41,7 @@ export default function GenreRow({ title, imdbIds, onSelect }) {
             <button
               key={movie.id}
               onClick={() => onSelect(movie.id)}
-              className="group w-32 shrink-0 text-left"
+              className="group w-36 shrink-0 text-left"
             >
               <div className="aspect-[2/3] w-full overflow-hidden rounded-xl bg-slate-800">
                 {movie.poster ? (

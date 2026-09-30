@@ -7,7 +7,7 @@ const navItems = [
 export default function Navbar({ activeView, onNavigate, favoritesCount }) {
   return (
     <header className="sticky top-0 z-40 border-b border-slate-800 bg-slate-900/95 backdrop-blur">
-      <div className="mx-auto flex max-w-4xl flex-wrap items-center justify-between gap-3 px-4 py-4">
+      <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-3 px-6 py-4">
         <div className="flex items-center gap-2">
           <span className="text-2xl">🎬</span>
           <h1 className="text-xl font-bold text-amber-400">Movie Search</h1>

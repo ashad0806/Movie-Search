@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { searchMovies, getMovieDetails } from './services/MovieApi'
 import Navbar from './components/Navbar'
+import Hero from './components/Hero'
 import SearchBar from './components/SearchBar'
 import Loader from './components/Loader'
 import ErrorMessage from './components/ErrorMessage'
@@ -9,6 +10,7 @@ import MovieModal from './components/MovieModal'
 import FavoritesList from './components/FavoritesList'
 import NewMovies from './components/NewMovies'
 import Recommendations from './components/Recommendations'
+import Footer from './components/Footer'
 
 const FAVORITES_KEY = 'movie-favorites'
 
@@ -106,22 +108,32 @@ export default function App() {
     ? favorites.some((fav) => fav.id === selectedMovie.id)
     : false
 
+  const isHeroFavorite = favorites.some((fav) => fav.id === 'tt1375666')
+
   return (
-    <div className="min-h-screen bg-slate-900">
+    <div className="flex min-h-screen flex-col bg-slate-900">
       <Navbar
         activeView={view}
         onNavigate={setView}
         favoritesCount={favorites.length}
       />
 
-      <div className="mx-auto max-w-4xl px-4 py-10">
+      <div className="mx-auto w-full max-w-7xl flex-1 px-6 py-10">
         {view === 'home' && (
           <>
-            <div className="mx-auto max-w-md">
+            <div className="mx-auto mb-10 max-w-md">
               <SearchBar onSearch={handleSearch} loading={loading} />
             </div>
 
-            <div className="mt-6">
+            {!hasSearched && (
+              <Hero
+                onSelect={handleSelectMovie}
+                onToggleFavorite={handleToggleFavorite}
+                isFavorite={isHeroFavorite}
+              />
+            )}
+
+            <div>
               {loading && <Loader />}
               {error && !loading && <ErrorMessage message={error} />}
 
@@ -178,6 +190,8 @@ export default function App() {
           />
         )}
       </div>
+
+      <Footer />
     </div>
   )
 }
