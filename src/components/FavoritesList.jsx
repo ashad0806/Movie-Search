@@ -2,10 +2,8 @@ export default function FavoritesList({ favorites, onSelect, onRemove }) {
   if (favorites.length === 0) return null
 
   return (
-    <div className="mb-8">
-      <h2 className="mb-3 text-lg font-semibold text-amber-400">
-        ⭐ Favorites
-      </h2>
+    <div>
+      
       <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
         {favorites.map((movie) => (
           <div

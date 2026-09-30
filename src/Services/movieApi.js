@@ -14,8 +14,6 @@ export async function searchMovies(query) {
 
   const data = await res.json()
 
-  // OMDb always returns 200 OK, even on failure — errors show up as
-  // { Response: "False", Error: "..." } instead of an HTTP error code.
   if (data.Response === 'False') {
     throw new Error(data.Error || 'No movies found.')
   }
