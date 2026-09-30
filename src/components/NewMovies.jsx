@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { getMovieDetails } from '../services/movieApi'
+import { getMovieDetails } from '../services/MovieApi'
 import MovieGrid from './MovieGrid'
 import Loader from './Loader'
 import ErrorMessage from './ErrorMessage'

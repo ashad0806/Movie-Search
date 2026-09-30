@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { searchMovies, getMovieDetails } from './services/movieApi'
+import { searchMovies, getMovieDetails } from './services/MovieApi'
 import Navbar from './components/Navbar'
 import SearchBar from './components/SearchBar'
 import Loader from './components/Loader'
@@ -7,13 +7,17 @@ import ErrorMessage from './components/ErrorMessage'
 import MovieGrid from './components/MovieGrid'
 import MovieModal from './components/MovieModal'
 import FavoritesList from './components/FavoritesList'
+import NewMovies from './components/NewMovies'
 
 const FAVORITES_KEY = 'movie-favorites'
 
 export default function App() {
+  const [view, setView] = useState('home') // 'home' | 'favorites' | 'newMovies'
+
   const [movies, setMovies] = useState([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+  const [hasSearched, setHasSearched] = useState(false)
 
   const [selectedMovie, setSelectedMovie] = useState(null)
   const [detailsLoading, setDetailsLoading] = useState(false)
@@ -35,6 +39,7 @@ export default function App() {
   const handleSearch = async (query) => {
     setLoading(true)
     setError('')
+    setHasSearched(true)
 
     try {
       const results = await searchMovies(query)
@@ -96,31 +101,52 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-slate-900">
-      <Navbar favoritesCount={favorites.length} />
+      <Navbar
+        activeView={view}
+        onNavigate={setView}
+        favoritesCount={favorites.length}
+      />
 
       <div className="mx-auto max-w-4xl px-4 py-10">
-        <div className="mx-auto max-w-md">
-          <SearchBar onSearch={handleSearch} loading={loading} />
-        </div>
+        {view === 'home' && (
+          <>
+            <div className="mx-auto max-w-md">
+              <SearchBar onSearch={handleSearch} loading={loading} />
+            </div>
 
-        <div className="mt-6">
-          <FavoritesList
-            favorites={favorites}
-            onSelect={handleSelectMovie}
-            onRemove={handleRemoveFavorite}
-          />
+            <div className="mt-6">
+              {loading && <Loader />}
+              {error && !loading && <ErrorMessage message={error} />}
+              {!loading && !error && movies.length > 0 && (
+                <MovieGrid movies={movies} onSelect={handleSelectMovie} />
+              )}
+              {!loading && !error && movies.length === 0 && !hasSearched && (
+                <p className="text-center text-slate-400">
+                  Search for a movie to get started.
+                </p>
+              )}
+            </div>
+          </>
+        )}
 
-          {loading && <Loader />}
-          {error && !loading && <ErrorMessage message={error} />}
-          {!loading && !error && movies.length > 0 && (
-            <MovieGrid movies={movies} onSelect={handleSelectMovie} />
-          )}
-          {!loading && !error && movies.length === 0 && favorites.length === 0 && (
-            <p className="text-center text-slate-400">
-              Search for a movie to get started.
-            </p>
-          )}
-        </div>
+        {view === 'favorites' && (
+          <>
+            <h2 className="mb-4 text-lg font-semibold text-amber-400">⭐ Your Favorites</h2>
+            {favorites.length > 0 ? (
+              <FavoritesList
+                favorites={favorites}
+                onSelect={handleSelectMovie}
+                onRemove={handleRemoveFavorite}
+              />
+            ) : (
+              <p className="text-center text-slate-400">
+                You haven't added any favorites yet. Star a movie to save it here.
+              </p>
+            )}
+          </>
+        )}
+
+        {view === 'newMovies' && <NewMovies onSelect={handleSelectMovie} />}
 
         {modalOpen && (
           <MovieModal
