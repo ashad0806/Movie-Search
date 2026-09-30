@@ -8,6 +8,7 @@ import MovieGrid from './components/MovieGrid'
 import MovieModal from './components/MovieModal'
 import FavoritesList from './components/FavoritesList'
 import NewMovies from './components/NewMovies'
+import Recommendations from './components/Recommendations'
 
 const FAVORITES_KEY = 'movie-favorites'
 
@@ -95,6 +96,12 @@ export default function App() {
     setFavorites((prev) => prev.filter((fav) => fav.id !== id))
   }
 
+  const handleClearResults = () => {
+    setMovies([])
+    setHasSearched(false)
+    setError('')
+  }
+
   const isFavorite = selectedMovie
     ? favorites.some((fav) => fav.id === selectedMovie.id)
     : false
@@ -117,13 +124,26 @@ export default function App() {
             <div className="mt-6">
               {loading && <Loader />}
               {error && !loading && <ErrorMessage message={error} />}
+
               {!loading && !error && movies.length > 0 && (
-                <MovieGrid movies={movies} onSelect={handleSelectMovie} />
+                <>
+                  <div className="mb-4 flex items-center justify-between">
+                    <h2 className="text-lg font-semibold text-slate-100">
+                      Search results
+                    </h2>
+                    <button
+                      onClick={handleClearResults}
+                      className="text-sm text-slate-400 hover:text-slate-100"
+                    >
+                      Clear
+                    </button>
+                  </div>
+                  <MovieGrid movies={movies} onSelect={handleSelectMovie} />
+                </>
               )}
+
               {!loading && !error && movies.length === 0 && !hasSearched && (
-                <p className="text-center text-slate-400">
-                  Search for a movie to get started.
-                </p>
+                <Recommendations onSelect={handleSelectMovie} />
               )}
             </div>
           </>
